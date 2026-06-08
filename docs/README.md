@@ -1,6 +1,12 @@
-# Niu Kanban 🎯
+# 🎯 Niu Private — Project Kanban Board
 
-Project Kanban board for **Niu Private** development — static, dark-themed, with drag & drop, persistence, and deployable to GitHub Pages.
+![Status](https://img.shields.io/badge/status-completed-success?style=flat)
+
+> Live project management board for **Niu Private** development. Tracks all tasks from backlog through completion.
+
+**🌐 Live:** [niumination.github.io/niu-private](https://niumination.github.io/niu-private/)
+
+---
 
 ## ✨ Features
 
@@ -10,33 +16,29 @@ Project Kanban board for **Niu Private** development — static, dark-themed, wi
 - **Priority levels**: Low 🟢, Medium 🟡, High 🔴
 - **Tags**: feature, bug, docs, design, devops, research
 - **Auto-save** to browser localStorage
+- **Reset** button restores default tasks
 - **Dark theme** matching Niu Private design
 - **Fully responsive** (mobile, tablet, desktop)
 - **Zero dependencies** — pure HTML + CSS + JS
 
-## 🚀 Deploy to GitHub Pages
+## 🚀 Deploy (GitHub Pages)
 
-### Option 1: Root repo (subfolder)
+This board auto-deploys from the `/docs` folder:
 
-1. Push this repo to GitHub
-2. Go to **Settings → Pages**
-3. Source: **Deploy from branch**
-4. Branch: `main`, folder: `/docs`
-5. **Save** — deployment otomatis
-6. Akses di: `https://niumination.github.io/niu-private/`
-
-## Alternative: Deploy ke repo terpisah
-
-Copy all files from `docs/` to a separate repo's root and enable Pages there.
+1. Go to repo **Settings → Pages**
+2. Source: **Deploy from branch**
+3. Branch: `main`, folder: `/docs`
+4. Board lives at: `https://niumination.github.io/niu-private/`
 
 ## 🎮 Usage
 
-- **Click +** on any column header to add a task
-- **Drag cards** between columns to update status
-- **Click ✏️** on a card to edit
-- **Click 🗑️** to delete
-- **↻ Reset** button restores default tasks
-- Data is stored in your browser — no backend needed
+| Action | How |
+|--------|-----|
+| **Add task** | Click **+** on any column header |
+| **Move task** | **Drag & drop** cards between columns |
+| **Edit task** | Click **✏️** on a card |
+| **Delete task** | Click **🗑️** on a card |
+| **Reset board** | Click **↻ Reset** button |
 
 ## 🎨 Design
 
@@ -50,4 +52,22 @@ Copy all files from `docs/` to a separate repo's root and enable Pages there.
 
 ---
 
-> Built for Niu Private project management. Track features, bugs, and tasks visually.
+## ✅ Project Completion
+
+All 11 project tasks are **completed and deployed**:
+
+| # | Task | Status |
+|---|------|--------|
+| 1 | Setup Supabase project + migration | ✅ Done |
+| 2 | Isi .env.local konfigurasi | ✅ Done |
+| 3 | Deploy Next.js ke Vercel | ✅ Done |
+| 4 | Test full flow | ✅ Done |
+| 5 | Selaraskan upload limit | ✅ Done |
+| 6 | Full-text search Bahasa Indonesia | ✅ Done |
+| 7 | Push repo ke GitHub | ✅ Done |
+| 8 | Deploy Kanban ke GitHub Pages | ✅ Done |
+| 9 | Fix upload UI & notifikasi | ✅ Done |
+| 10 | Sidebar kategori + dashboard stats | ✅ Done |
+| 11 | Preview embed text files | ✅ Done |
+
+> Built for Niu Private — a secure document vault with Next.js, GitHub Storage, and Supabase.
