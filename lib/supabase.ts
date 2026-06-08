@@ -85,7 +85,7 @@ export async function getDocuments(options?: {
   if (options?.search) {
     query = query.textSearch("name", options.search, {
       type: "websearch",
-      config: "english",
+      config: "indonesian",
     });
   }
 
@@ -119,7 +119,7 @@ export async function deleteDocumentMeta(id: string): Promise<boolean> {
 export async function searchDocuments(query: string): Promise<DocumentRow[]> {
   const { data, error } = await db()
     .select("*")
-    .textSearch("name", query, { type: "websearch", config: "english" })
+    .textSearch("name", query, { type: "websearch", config: "indonesian" })
     .limit(20);
 
   if (error) throw error;
