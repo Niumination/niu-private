@@ -38,6 +38,12 @@ export default function DocumentsClient() {
     fetchDocuments();
   }, [selectedCategory]);
 
+  // Sync category when URL changes (e.g. sidebar click)
+  useEffect(() => {
+    const cat = searchParams.get("category") || "all";
+    setSelectedCategory(cat);
+  }, [searchParams]);
+
   async function fetchDocuments() {
     setLoading(true);
     try {

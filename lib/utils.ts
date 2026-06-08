@@ -68,8 +68,8 @@ export function getCategoryLabel(category: string): string {
   const labels: Record<string, string> = {
     pdf: "PDF",
     image: "Image",
-    word: "Document",
-    excel: "Spreadsheet",
+    word: "Word",
+    excel: "Excel",
     archive: "Archive",
     other: "Other",
   };

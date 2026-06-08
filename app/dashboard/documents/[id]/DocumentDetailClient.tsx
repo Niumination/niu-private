@@ -120,9 +120,18 @@ export default function DocumentDetailClient({ id }: Props) {
   }
 
   const isImage = doc.mime_type?.startsWith("image/");
-  const isPDF = doc.mime_type === "application/pdf";
-  const isText = doc.mime_type?.startsWith("text/") || [".txt", ".md", ".csv", ".json", ".xml", ".log", ".yaml", ".yml", ".env", ".sh", ".bat", ".py", ".js", ".ts", ".tsx", ".jsx", ".css", ".html", ".sql", ".toml", ".ini"].some(ext => doc.name?.endsWith(ext));
-  const canPreview = isImage || isPDF || isText;
+  const isText = doc.mime_type?.startsWith("text/") || [".txt", ".md", ".csv", ".json", ".xml", ".log", ".yaml", ".yml", ".env", ".sh", ".bat", ".py", ".js", ".ts", ".tsx", ".jsx", ".css", ".html", ".sql", ".toml", ".ini", ".cfg", ".conf"].some(ext => doc.name?.endsWith(ext));
+  const isOfficeDoc = !isText && !isImage && (
+    doc.mime_type === "application/pdf" ||
+    doc.mime_type?.includes("word") ||
+    doc.mime_type?.includes("document") ||
+    doc.mime_type?.includes("excel") ||
+    doc.mime_type?.includes("spreadsheet") ||
+    doc.mime_type?.includes("powerpoint") ||
+    doc.mime_type?.includes("presentation") ||
+    [".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx"].some(ext => doc.name?.endsWith(ext))
+  );
+  const canPreview = isImage || isText || isOfficeDoc;
 
   return (
     <div className="max-w-5xl mx-auto space-y-6 animate-in">
@@ -255,12 +264,12 @@ export default function DocumentDetailClient({ id }: Props) {
             <div className="flex items-center justify-center py-20">
               <Loader2 className="w-5 h-5 text-niu-400 animate-spin" />
             </div>
-          ) : isPDF ? (
+          ) : isOfficeDoc ? (
             <div className="w-full">
               <iframe
-                src={doc.download_url}
-                className="w-full rounded-lg border border-dark-border bg-white"
-                style={{ height: "70vh" }}
+                src={`https://docs.google.com/viewer?url=${encodeURIComponent(doc.download_url)}&embedded=true`}
+                className="w-full rounded-lg border border-dark-border"
+                style={{ height: "75vh" }}
                 title={doc.name}
               />
               <div className="mt-3 text-center">
