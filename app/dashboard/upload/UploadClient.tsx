@@ -363,6 +363,33 @@ export default function UploadClient() {
                 View Documents
               </button>
             </div>
+          ) : results.length > 0 ? (
+            <div className="space-y-3 w-full">
+              <div className="space-y-2">
+                {results.map((result, i) => (
+                  <div
+                    key={i}
+                    className={cn(
+                      "flex items-center gap-2 text-sm p-2 rounded-lg",
+                      result.success ? "text-green-400" : "text-red-400"
+                    )}
+                  >
+                    {result.success ? (
+                      <CheckCircle2 className="w-4 h-4" />
+                    ) : (
+                      <AlertCircle className="w-4 h-4" />
+                    )}
+                    <span className="truncate">{result.name}</span>
+                    {result.error && (
+                      <span className="text-xs text-gray-500">— {result.error}</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <button onClick={resetForm} className="niu-btn-primary">
+                Try Again
+              </button>
+            </div>
           ) : null}
         </div>
       )}
