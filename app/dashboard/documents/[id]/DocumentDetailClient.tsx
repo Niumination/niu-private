@@ -30,10 +30,42 @@ export default function DocumentDetailClient({ id }: Props) {
   const [loading, setLoading] = useState(true);
   const [showDelete, setShowDelete] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [textContent, setTextContent] = useState<string | null>(null);
+  const [textLoading, setTextLoading] = useState(false);
 
   useEffect(() => {
     fetchDoc();
   }, [id]);
+
+  useEffect(() => {
+    if (doc && isTextFile(doc)) {
+      fetchTextContent();
+    } else {
+      setTextContent(null);
+    }
+  }, [doc]);
+
+  function isTextFile(d: any): boolean {
+    if (d.mime_type?.startsWith("text/")) return true;
+    const textExts = [".txt", ".md", ".csv", ".json", ".xml", ".log", ".yaml", ".yml", ".env", ".sh", ".bat", ".py", ".js", ".ts", ".tsx", ".jsx", ".css", ".html", ".sql", ".toml", ".ini", ".cfg", ".conf"];
+    return textExts.some(ext => d.name?.endsWith(ext));
+  }
+
+  async function fetchTextContent() {
+    if (!doc?.download_url) return;
+    setTextLoading(true);
+    try {
+      const res = await fetch(doc.download_url);
+      if (res.ok) {
+        const text = await res.text();
+        setTextContent(text);
+      }
+    } catch {
+      setTextContent(null);
+    } finally {
+      setTextLoading(false);
+    }
+  }
 
   async function fetchDoc() {
     try {
@@ -215,7 +247,15 @@ export default function DocumentDetailClient({ id }: Props) {
                 className="max-w-full max-h-[70vh] rounded-lg object-contain"
               />
             </div>
-          ) : isPDF || isText ? (
+          ) : isText && textContent !== null ? (
+            <pre className="w-full max-h-[70vh] overflow-auto rounded-lg bg-dark-bg border border-dark-border p-4 text-sm text-gray-300 font-mono leading-relaxed whitespace-pre-wrap break-words">
+              {textContent}
+            </pre>
+          ) : isText && textLoading ? (
+            <div className="flex items-center justify-center py-20">
+              <Loader2 className="w-5 h-5 text-niu-400 animate-spin" />
+            </div>
+          ) : isPDF ? (
             <div className="w-full">
               <iframe
                 src={doc.download_url}

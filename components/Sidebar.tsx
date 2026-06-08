@@ -44,11 +44,12 @@ const navItems = [
 ];
 
 const categoryFilters = [
-  { label: "PDF", icon: FileText, color: "text-red-400" },
-  { label: "Images", icon: FileImage, color: "text-blue-400" },
-  { label: "Documents", icon: FileText, color: "text-sky-400" },
-  { label: "Spreadsheets", icon: FileSpreadsheet, color: "text-green-400" },
-  { label: "Archives", icon: FileArchive, color: "text-yellow-400" },
+  { label: "PDF", value: "pdf", icon: FileText, color: "text-red-400" },
+  { label: "Image", value: "image", icon: FileImage, color: "text-blue-400" },
+  { label: "Word", value: "word", icon: FileText, color: "text-sky-400" },
+  { label: "Excel", value: "excel", icon: FileSpreadsheet, color: "text-green-400" },
+  { label: "Archive", value: "archive", icon: FileArchive, color: "text-yellow-400" },
+  { label: "Other", value: "other", icon: FileText, color: "text-gray-400" },
 ];
 
 interface SidebarProps {
@@ -137,7 +138,7 @@ export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
           {categoryFilters.map((cat) => (
             <Link
               key={cat.label}
-              href={`/dashboard/documents?category=${cat.label.toLowerCase()}`}
+              href={`/dashboard/documents?category=${cat.value}`}
               onClick={() => {
                 if (window.innerWidth < 1024) onToggle();
               }}

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import {
   FileText,
   Upload,
@@ -10,38 +11,39 @@ import {
   ArrowUpRight,
   Clock,
   Shield,
+  Loader2,
 } from "lucide-react";
-import { cn, getCategoryColor, getCategoryLabel } from "@/lib/utils";
+import { cn, formatFileSize, getCategoryColor, getCategoryLabel } from "@/lib/utils";
 import Link from "next/link";
 
-const stats = [
+const statDefaults = [
   {
+    id: "total",
     label: "Total Documents",
-    value: "—",
     icon: FileText,
     color: "text-niu-400",
     bg: "bg-niu-500/10",
     border: "border-niu-500/20",
   },
   {
+    id: "storage",
     label: "Storage Used",
-    value: "—",
     icon: HardDrive,
     color: "text-purple-400",
     bg: "bg-purple-500/10",
     border: "border-purple-500/20",
   },
   {
+    id: "categories",
     label: "Categories",
-    value: "5",
     icon: Archive,
     color: "text-yellow-400",
     bg: "bg-yellow-500/10",
     border: "border-yellow-500/20",
   },
   {
+    id: "recent",
     label: "Recent Uploads",
-    value: "—",
     icon: Clock,
     color: "text-green-400",
     bg: "bg-green-500/10",
@@ -77,6 +79,42 @@ const quickActions = [
 ];
 
 export default function DashboardClient() {
+  const [documents, setDocuments] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
+
+  async function fetchStats() {
+    try {
+      const res = await fetch("/api/documents");
+      if (res.ok) {
+        const data = await res.json();
+        setDocuments(data.documents || []);
+      }
+    } catch (err) {
+      console.error("Failed to fetch stats", err);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const totalSize = documents.reduce((sum, d) => sum + (d.size || 0), 0);
+  const categories = [...new Set(documents.map((d) => d.category).filter(Boolean))];
+  const recentCount = documents.filter((d) => {
+    const days = 7;
+    const cutoff = Date.now() - days * 24 * 60 * 60 * 1000;
+    return new Date(d.created_at).getTime() > cutoff;
+  }).length;
+
+  const statValues: Record<string, string> = {
+    total: loading ? "..." : String(documents.length),
+    storage: loading ? "..." : totalSize > 0 ? formatFileSize(totalSize) : "0 B",
+    categories: loading ? "..." : String(categories.length),
+    recent: loading ? "..." : String(recentCount),
+  };
+
   return (
     <div className="space-y-8 animate-in">
       {/* Header */}
@@ -89,9 +127,9 @@ export default function DashboardClient() {
 
       {/* Stats Grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.map((stat) => (
+        {statDefaults.map((stat) => (
           <div
-            key={stat.label}
+            key={stat.id}
             className={cn(
               "niu-card p-5",
               stat.bg,
@@ -110,7 +148,13 @@ export default function DashboardClient() {
                 <stat.icon className={cn("w-5 h-5", stat.color)} />
               </div>
             </div>
-            <p className="text-2xl font-bold text-white">{stat.value}</p>
+            <p className="text-2xl font-bold text-white">
+              {loading ? (
+                <Loader2 className="w-5 h-5 animate-spin text-gray-500" />
+              ) : (
+                statValues[stat.id]
+              )}
+            </p>
             <p className="text-xs text-gray-500 mt-1">{stat.label}</p>
           </div>
         ))}
@@ -155,8 +199,8 @@ export default function DashboardClient() {
         <h2 className="text-lg font-semibold text-white mb-4">
           Document Categories
         </h2>
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-          {["pdf", "image", "word", "excel", "archive"].map((cat) => (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+          {["pdf", "image", "word", "excel", "archive", "other"].map((cat) => (
             <Link
               key={cat}
               href={`/dashboard/documents?category=${cat}`}
