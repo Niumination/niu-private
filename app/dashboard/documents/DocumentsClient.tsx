@@ -21,7 +21,7 @@ import {
 import { cn, formatFileSize, getCategoryColor, getCategoryLabel, truncate } from "@/lib/utils";
 import Link from "next/link";
 
-const categories = ["all", "pdf", "image", "word", "excel", "archive"];
+const categories = ["all", "pdf", "image", "word", "excel", "archive", "other"];
 
 export default function DocumentsClient() {
   const searchParams = useSearchParams();

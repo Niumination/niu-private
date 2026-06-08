@@ -285,7 +285,7 @@ export default function UploadClient() {
         </div>
       )}
 
-      {/* Progress */}
+      {/* Progress Bar */}
       {uploading && (
         <div className="niu-card p-5 space-y-3">
           <div className="flex items-center justify-between text-sm">
@@ -298,21 +298,27 @@ export default function UploadClient() {
               style={{ width: `${progress}%` }}
             />
           </div>
+        </div>
+      )}
 
-          {/* Results */}
-          <div className="space-y-2 mt-4">
+      {/* Upload Results (persistent after upload) */}
+      {results.length > 0 && (
+        <div className="niu-card p-5 space-y-3">
+          <div className="space-y-2">
             {results.map((result, i) => (
               <div
                 key={i}
                 className={cn(
                   "flex items-center gap-2 text-sm p-2 rounded-lg",
-                  result.success ? "text-green-400" : "text-red-400"
+                  result.success
+                    ? "text-green-400 bg-green-500/5"
+                    : "text-red-400 bg-red-500/5"
                 )}
               >
                 {result.success ? (
-                  <CheckCircle2 className="w-4 h-4" />
+                  <CheckCircle2 className="w-4 h-4 shrink-0" />
                 ) : (
-                  <AlertCircle className="w-4 h-4" />
+                  <AlertCircle className="w-4 h-4 shrink-0" />
                 )}
                 <span className="truncate">{result.name}</span>
                 {result.error && (
@@ -327,7 +333,7 @@ export default function UploadClient() {
       {/* Actions */}
       {files.length > 0 && (
         <div className="flex items-center gap-3">
-          {!uploading ? (
+          {!uploading && results.length === 0 ? (
             <>
               <button
                 onClick={handleUpload}
@@ -344,7 +350,7 @@ export default function UploadClient() {
                 Clear
               </button>
             </>
-          ) : allSuccess ? (
+          ) : !uploading && results.length > 0 && allSuccess ? (
             <div className="flex items-center gap-3 w-full">
               <div className="flex items-center gap-2 text-green-400 text-sm">
                 <CheckCircle2 className="w-4 h-4" />
@@ -363,29 +369,8 @@ export default function UploadClient() {
                 View Documents
               </button>
             </div>
-          ) : results.length > 0 ? (
-            <div className="space-y-3 w-full">
-              <div className="space-y-2">
-                {results.map((result, i) => (
-                  <div
-                    key={i}
-                    className={cn(
-                      "flex items-center gap-2 text-sm p-2 rounded-lg",
-                      result.success ? "text-green-400" : "text-red-400"
-                    )}
-                  >
-                    {result.success ? (
-                      <CheckCircle2 className="w-4 h-4" />
-                    ) : (
-                      <AlertCircle className="w-4 h-4" />
-                    )}
-                    <span className="truncate">{result.name}</span>
-                    {result.error && (
-                      <span className="text-xs text-gray-500">— {result.error}</span>
-                    )}
-                  </div>
-                ))}
-              </div>
+          ) : !uploading && results.length > 0 ? (
+            <div className="flex items-center gap-3">
               <button onClick={resetForm} className="niu-btn-primary">
                 Try Again
               </button>

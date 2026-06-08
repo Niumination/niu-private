@@ -89,6 +89,8 @@ export default function DocumentDetailClient({ id }: Props) {
 
   const isImage = doc.mime_type?.startsWith("image/");
   const isPDF = doc.mime_type === "application/pdf";
+  const isText = doc.mime_type?.startsWith("text/") || [".txt", ".md", ".csv", ".json", ".xml", ".log", ".yaml", ".yml", ".env", ".sh", ".bat", ".py", ".js", ".ts", ".tsx", ".jsx", ".css", ".html", ".sql", ".toml", ".ini"].some(ext => doc.name?.endsWith(ext));
+  const canPreview = isImage || isPDF || isText;
 
   return (
     <div className="max-w-5xl mx-auto space-y-6 animate-in">
@@ -213,21 +215,24 @@ export default function DocumentDetailClient({ id }: Props) {
                 className="max-w-full max-h-[70vh] rounded-lg object-contain"
               />
             </div>
-          ) : isPDF ? (
-            <div className="text-center py-10">
-              <FileText className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-              <p className="text-gray-400 text-sm mb-4">
-                PDF preview requires a PDF viewer. Download to view.
-              </p>
-              <a
-                href={doc.download_url || "#"}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="niu-btn-primary inline-flex items-center gap-2"
-              >
-                <Download className="w-4 h-4" />
-                Download PDF
-              </a>
+          ) : isPDF || isText ? (
+            <div className="w-full">
+              <iframe
+                src={doc.download_url}
+                className="w-full rounded-lg border border-dark-border bg-white"
+                style={{ height: "70vh" }}
+                title={doc.name}
+              />
+              <div className="mt-3 text-center">
+                <a
+                  href={doc.download_url || "#"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-gray-500 hover:text-niu-400 transition-colors"
+                >
+                  Open in new tab ↗
+                </a>
+              </div>
             </div>
           ) : (
             <div className="text-center py-10">
